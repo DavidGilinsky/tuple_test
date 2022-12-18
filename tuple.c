@@ -177,3 +177,17 @@ bool ROM_sanity_check(const uint16_t *ROM, size_t size)
 
     return false;
 }
+
+void ROM_create_odd_alignment(uint16_t* ROM)
+{
+    tuple_t* tuple;
+    tuple=(tuple_t *)ROM;
+    tuple->ID=0x00;
+    tuple->next=0x07;
+    tuple->length=0x1;
+
+    tuple=(tuple_t *)((uint8_t *)ROM+tuple->next);
+    tuple->ID=0x01;
+    tuple->next=0xFFFF;
+    tuple->length=0x1;
+}
