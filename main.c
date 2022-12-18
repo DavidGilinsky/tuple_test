@@ -61,11 +61,32 @@ int main() {
     } else printf("Tuple %d not found.\n", id);
     printf("\n");
 
+    //find all the tuples
+    id=0;
+    while(find_tuple(ROM_const, id, length)!=NULL)
+    {
+        printf("Found tuple %d with length %d\n", id, (uint16_t )*length);
+        id=id+1;
+    }
+
     printf("Testing error handling.\n");
     printf("Filling ROM with zeros.\n");
     ROM_fill_zeros(ROM,ROM_size);
     printf("sanity check: %s\n",
            ROM_sanity_check(ROM_const, ROM_size) ? "true" : "false");
+
+    printf("Filling ROM with random tuples\n");
+    ROM_fill_random(ROM, ROM_size);
+    printf("Putting bogus value in final tuple->next\n");
+    *((uint8_t *)ROM+0xFFF4)=0xFE;
+    *((uint8_t *)ROM+0xFFF5)=0xFF;
+    printf("Running Sanity Check\n");
+    printf("sanity check: %s\n",
+           ROM_sanity_check(ROM_const, ROM_size) ? "true" : "false");
+
+    printf("Setting header-next of tuple 3 to head of tuple 2.\n");
+    *((uint8_t *)ROM+0x00CF)=0x67;
+    *((uint8_t *)ROM+0x00D0)=0x00;
 
     printf("Running find_touple.\n");
     if(find_tuple(ROM_const, id, length)==NULL)

@@ -9,7 +9,7 @@
 #include <stdbool.h>
 #include "tuple.h"
 
-// #define DEBUG
+//#define DEBUG
 
 // Initialize the simulated ROM
 // address space by filling it with 0xFF
@@ -29,6 +29,7 @@ void ROM_init(uint16_t *ROM, size_t size)
 // find the tuple with the given ID, return a pointer to the data section
 uint16_t *find_tuple(const uint16_t *rom, uint16_t id, size_t *len)
 {
+    // check for NULL pointer
     assert(rom!=NULL && "find_tuple: NULL pointer: *rom");
     // declare a tuple_t structure to overlay on the ROM
     tuple_t *tuple;
@@ -126,7 +127,7 @@ void ROM_fill_zeros(uint16_t* ROM, size_t size)
     }
 }
 
-// Check the ROM for at least one tuple and a valid end flag (0xFFFF in header->next)
+// Check the ROM for at least one tuple, no infinite loops, and a valid end flag (0xFFFF in header->next)
 bool ROM_sanity_check(const uint16_t *ROM, size_t size)
 {
     assert(ROM!=NULL && "ROM_sanity_check: NULL pointer: *rom");
