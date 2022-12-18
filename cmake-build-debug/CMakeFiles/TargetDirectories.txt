@@ -1,0 +1,3 @@
+/home/gilinsky/CLionProjects/tuple_test/cmake-build-debug/CMakeFiles/tuple_test.dir
+/home/gilinsky/CLionProjects/tuple_test/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/gilinsky/CLionProjects/tuple_test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
