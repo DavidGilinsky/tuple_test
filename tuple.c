@@ -66,7 +66,8 @@ uint16_t *find_tuple(const uint16_t *rom, uint16_t id, size_t *len)
 
     return(0);
 }
-
+// fill ROM with random tuples
+// TODO: add random seed to argument list
 void ROM_fill_random(uint16_t *ROM, size_t size)
 {
    assert(ROM!=NULL && "ROM_fill_random: NULL pointer: *rom");
