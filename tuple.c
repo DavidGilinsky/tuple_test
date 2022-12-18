@@ -13,6 +13,9 @@
 
 // Initialize the simulated ROM
 // address space by filling it with 0xFF
+// There are two pointers to the ROM block.
+// one const, one not.
+// The const is aliased to the not-const in main()
 void ROM_init(uint16_t *ROM, size_t size)
 {
     assert(ROM!=NULL && "ROM_init: NULL pointer: *rom");
