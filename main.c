@@ -5,29 +5,51 @@
 #include "tuple.h"
 
 #define DEBUG
-
+// We need a pointer to a block of memory we can modify to simulate ROM
 uint16_t* ROM;
+// And we need pointer to the same block of memory declared as const
+// We'll fool the compiler into allowing us to do this
+const uint16_t* ROM_const;
+// by copying the address of the block to a temporary variable
+uint64_t rom_address;
+// then assigning that address to the const block
 
-
+// We'll simulate a 64K ROM
 uint16_t ROM_size=0xFFFF;
 
 int main() {
     size_t* length;
     uint8_t* data;
     uint16_t id;
-
+// This is the tuple ID we'll search for in the find_tuple test
     id=10;
 
     printf("Hello, World!\n");
+    // Allocate the RAM
     ROM=xmalloc(ROM_size);
+    // Copy the address to our temporary variable
+    rom_address=(uint64_t)ROM;
+    // Now create the alias by copying the address to the pointer to const
+    ROM_const=(uint16_t *)rom_address;
+
 #ifdef DEBUG
     printf("ROM Address: %p\n", ROM);
 #endif
 
+    // Write 0xFF to the entire block
     ROM_init(ROM, ROM_size);
+    // Create random tuples in the block
     ROM_fill_random(ROM, ROM_size);
 
-    data=(uint8_t *)find_tuple(ROM, id, length);
+    // run a sanity check on the ROM
+    if(!ROM_sanity_check(ROM_const, ROM_size))
+    {
+        printf("ROM Corrupt");
+        return 0;
+    }
+    // find a tuple by its ID - Pass the pointer to const
+    data=(uint8_t *)find_tuple(ROM_const, id, length);
+    // spit out the data block associated with the tuple
     if(data!=NULL)
     {
        printf("Found Tuple %d - length %d ", id,(uint16_t) *length);
@@ -39,6 +61,20 @@ int main() {
     } else printf("Tuple %d not found.\n", id);
     printf("\n");
 
+    printf("Testing error handling.\n");
+    printf("Filling ROM with zeros.\n");
+    ROM_fill_zeros(ROM,ROM_size);
+    printf("sanity check: %s\n",
+           ROM_sanity_check(ROM_const, ROM_size) ? "true" : "false");
+
+    printf("Running find_touple.\n");
+    if(find_tuple(ROM_const, id, length)==NULL)
+    {
+        printf("Expected result - NULL return with 0x0000 as header->next.\n");
+    } else
+    {
+        printf("Not the expected results. Non NULL return.\n");
+    }
     free(ROM);
     return 0;
 }
